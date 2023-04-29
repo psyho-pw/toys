@@ -34,6 +34,6 @@ export class AuthService {
     }
 
     public async handleMessage(data: any) {
-        this.logger.log(data)
+        this.logger.error(data.request)
     }
 }

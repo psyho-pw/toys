@@ -33,7 +33,6 @@ export class JwtAuthGuard implements CanActivate {
             this.logger.verbose(context.switchToHttp().getRequest().cookies)
             authentication = context.switchToHttp().getRequest().cookies?.Authentication
         }
-        this.logger.debug(authentication)
 
         if (!authentication) {
             throw new UnauthorizedException('No value was provided for Authentication')
