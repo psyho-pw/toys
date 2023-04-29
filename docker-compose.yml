@@ -1,0 +1,28 @@
+services:
+    toys:
+      build:
+        context: .
+        dockerfile: ./apps/toys/Dockerfile
+        target: development
+      command: yarn start:dev
+      env_file:
+        - ./apps/toys/.env
+      volumes:
+        - .:/usr/src/app
+        - /usr/src/app/node_modules
+      ports:
+        - '3000:3000'
+
+    auth:
+      build:
+        context: .
+        dockerfile: ./apps/auth/Dockerfile
+        target: development
+      command: yarn start:dev auth
+      env_file:
+        - ./apps/auth/.env
+      volumes:
+        - .:/usr/src/app
+        - /usr/src/app/node_modules
+      ports:
+        - '3010:3000'

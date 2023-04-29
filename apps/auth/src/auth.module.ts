@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common'
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import {AuthController} from './auth.controller'
 import {AuthService} from './auth.service'
 import {ConfigModule} from '@nestjs/config'
@@ -11,6 +11,7 @@ import {User as UserEntity} from '@app/common/maria/entity/user.entity'
 import {UserMongoRepository} from './user-mongo.repository'
 import {TypeOrmModule} from '@nestjs/typeorm'
 import {UserMariaRepository} from './user-maria.repository'
+import {LoggerMiddleware} from '@app/common/middlewares/logger.middleware'
 
 @Module({
     imports: [
@@ -38,4 +39,8 @@ import {UserMariaRepository} from './user-maria.repository'
     controllers: [AuthController],
     providers: [AuthService, UserMongoRepository, UserMariaRepository],
 })
-export class AuthModule {}
+export class AuthModule implements NestModule {
+    configure(consumer: MiddlewareConsumer): void {
+        consumer.apply(LoggerMiddleware).forRoutes('/')
+    }
+}
