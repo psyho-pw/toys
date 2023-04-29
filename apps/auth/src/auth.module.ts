@@ -3,11 +3,14 @@ import {AuthController} from './auth.controller'
 import {AuthService} from './auth.service'
 import {ConfigModule} from '@nestjs/config'
 // import Joi from 'joi'
-import {MongoModule} from '@app/common'
+import {MariaModule, MongoModule} from '@app/common'
 import * as Joi from 'joi'
 import {MongooseModule} from '@nestjs/mongoose'
 import {User, UserSchema} from './schema/user.schema'
-import {UserRepository} from './user.repository'
+import {User as UserEntity} from '@app/common/maria/entity/user.entity'
+import {UserMongoRepository} from './user-mongo.repository'
+import {TypeOrmModule} from '@nestjs/typeorm'
+import {UserMariaRepository} from './user-maria.repository'
 
 @Module({
     imports: [
@@ -29,8 +32,10 @@ import {UserRepository} from './user.repository'
         }),
         MongoModule,
         MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
+        MariaModule,
+        TypeOrmModule.forFeature([UserEntity]),
     ],
     controllers: [AuthController],
-    providers: [AuthService, UserRepository],
+    providers: [AuthService, UserMongoRepository, UserMariaRepository],
 })
 export class AuthModule {}

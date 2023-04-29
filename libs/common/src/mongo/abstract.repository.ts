@@ -5,9 +5,7 @@ import {Connection, FilterQuery, Model, SaveOptions, Types, UpdateQuery} from 'm
 export abstract class AbstractMongoRepository<T extends AbstractMongoSchema> {
     protected abstract readonly logger: Logger
 
-    constructor(protected readonly model: Model<T>, private readonly connection: Connection) {
-        console.log(connection)
-    }
+    constructor(protected readonly model: Model<T>, private readonly connection: Connection) {}
 
     async create(document: Omit<T, '_id'>, options?: SaveOptions): Promise<T> {
         const doc = new this.model({...document, _id: new Types.ObjectId()})
