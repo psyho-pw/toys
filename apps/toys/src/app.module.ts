@@ -4,6 +4,8 @@ import {AppController} from './app.controller'
 import {AppService} from './app.service'
 import {LoggerMiddleware} from '@app/common/middlewares/logger.middleware'
 import {ConfigModule} from '@nestjs/config'
+import {RabbitMQModule} from '@app/common'
+import {AUTH_SERVICE} from './constants/services'
 
 @Module({
     imports: [
@@ -14,6 +16,7 @@ import {ConfigModule} from '@nestjs/config'
                 PORT: Joi.number().required(),
             }),
         }),
+        RabbitMQModule.register({name: AUTH_SERVICE}),
     ],
     controllers: [AppController],
     providers: [AppService],

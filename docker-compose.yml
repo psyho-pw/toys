@@ -24,5 +24,8 @@ services:
       volumes:
         - .:/usr/src/app
         - /usr/src/app/node_modules
+
+    rabbitmq:
+      image: rabbitmq
       ports:
-        - '3010:3000'
+        - '5672:5672'

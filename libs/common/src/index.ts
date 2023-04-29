@@ -5,3 +5,8 @@ export * from './mongo/abstract.schema'
 export * from './maria/maria.module'
 export * from './maria/abstract.repository'
 export * from './maria/abstract.entity'
+
+export * from './rabbitMQ/rabbitMQ.module'
+export * from './rabbitMQ/rabbitMQ.service'
+
+export * from './middlewares/logger.middleware'

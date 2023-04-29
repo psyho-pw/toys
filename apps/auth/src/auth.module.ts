@@ -2,7 +2,7 @@ import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import {AuthController} from './auth.controller'
 import {AuthService} from './auth.service'
 import {ConfigModule} from '@nestjs/config'
-import {MariaModule, MongoModule} from '@app/common'
+import {LoggerMiddleware, MariaModule, MongoModule, RabbitMQModule} from '@app/common'
 import * as Joi from 'joi'
 import {MongooseModule} from '@nestjs/mongoose'
 import {User, UserSchema} from './schema/user.schema'
@@ -10,7 +10,6 @@ import {User as UserEntity} from '@app/common/maria/entity/user.entity'
 import {UserMongoRepository} from './user-mongo.repository'
 import {TypeOrmModule} from '@nestjs/typeorm'
 import {UserMariaRepository} from './user-maria.repository'
-import {LoggerMiddleware} from '@app/common/middlewares/logger.middleware'
 
 @Module({
     imports: [
@@ -28,12 +27,16 @@ import {LoggerMiddleware} from '@app/common/middlewares/logger.middleware'
 
                 MONGO_URI: Joi.string().required(),
                 MONGO_DATABASE: Joi.string().required(),
+
+                RABBIT_MQ_URI: Joi.string().required(),
+                RABBIT_MQ_AUTH_QUEUE: Joi.string().required(),
             }),
         }),
         MongoModule,
         MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
         MariaModule,
         TypeOrmModule.forFeature([UserEntity]),
+        RabbitMQModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, UserMongoRepository, UserMariaRepository],

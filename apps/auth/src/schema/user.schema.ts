@@ -1,6 +1,7 @@
 import {Prop, SchemaFactory} from '@nestjs/mongoose'
 import {AbstractMongoResponse, AbstractMongoSchema, GeneralSchema} from '@app/common'
-import {Exclude, Type} from 'class-transformer'
+import {Exclude} from 'class-transformer'
+import {genSalt, hash} from 'bcrypt'
 
 @GeneralSchema()
 export class User extends AbstractMongoSchema {
@@ -21,6 +22,11 @@ export class User extends AbstractMongoSchema {
 
     @Prop({required: false, type: Number, default: null})
     activatedAt: number | null
+
+    public async setPassword(password: string) {
+        const salt = await genSalt()
+        this.password = await hash(password, salt)
+    }
 }
 
 export class UserResponse extends AbstractMongoResponse {}

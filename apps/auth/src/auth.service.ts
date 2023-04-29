@@ -1,37 +1,41 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable, Logger} from '@nestjs/common'
 import {UserMongoRepository} from './user-mongo.repository'
-import {User, UserExcludeCredentials} from './schema/user.schema'
-import {User as UserEntity} from '@app/common/maria/entity/user.entity'
+import {User, UserExcludeCredentials} from '@app/common/maria/entity/user.entity'
 import {Types} from 'mongoose'
 import {plainToInstance} from 'class-transformer'
 import {UserMariaRepository} from './user-maria.repository'
 
 @Injectable()
 export class AuthService {
+    private readonly logger = new Logger(AuthService.name)
     constructor(private readonly userMongoRepository: UserMongoRepository, private readonly userMariaRepository: UserMariaRepository) {}
-    async createUserViaMongo() {
-        const user = new User()
-        user.email = 'fishcreek@naver.com'
-        user.name = 'sayho'
-        return this.userMongoRepository.create(user)
+    // public async createUserViaMongo(createUserDto: CreateUserDto) {
+    //     const user = new User()
+    //     user.email = createUserDto.email
+    //     user.name = createUserDto.name
+    //     await user.setPassword(createUserDto.password)
+    //
+    //     return plainToInstance(UserExcludeCredentialsMongo, await this.userMongoRepository.create(user))
+    // }
+    //
+    // public async createUserViaMaria(createUserDto: CreateUserDto) {
+    //     const user = new UserEntity()
+    //     user.email = createUserDto.email
+    //     user.name = createUserDto.name
+    //     await user.setPassword(createUserDto.password)
+    //
+    //     return plainToInstance(UserExcludeCredentialsMaria, await this.userMariaRepository.create(user))
+    // }
+
+    public async createUser(data: any) {
+        this.logger.log('Auth ...', data)
     }
 
-    async createUserViaMaria() {
-        const user = new UserEntity()
-        user.email = 'fishcreek@naver.com'
-        user.name = 'sayho'
-        return this.userMariaRepository.create(user)
-    }
-
-    async findOneViaMongo(userId: string) {
-        return this.userMongoRepository.findOne({_id: new Types.ObjectId(userId)}).then(e => plainToInstance(UserExcludeCredentials, e))
-    }
-
-    async findOneViaMaria(id: number) {
-        return this.userMariaRepository.findOneById(id)
-    }
-
-    async test() {
-        return this.userMariaRepository.findByCondition({id: 1})
-    }
+    // public async findOneViaMongo(userId: string) {
+    //     return this.userMongoRepository.findOne({_id: new Types.ObjectId(userId)}).then(e => plainToInstance(UserExcludeCredentialsMongo, e))
+    // }
+    //
+    // public async findOneViaMaria(id: number) {
+    //     return this.userMariaRepository.findOneById(id).then(e => plainToInstance(UserExcludeCredentialsMaria, e))
+    // }
 }
