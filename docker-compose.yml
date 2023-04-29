@@ -12,6 +12,8 @@ services:
         - /usr/src/app/node_modules
       ports:
         - '3000:3000'
+      depends_on:
+        - rabbitmq
 
     auth:
       build:
@@ -24,6 +26,10 @@ services:
       volumes:
         - .:/usr/src/app
         - /usr/src/app/node_modules
+      ports:
+        - '3001:3001'
+      depends_on:
+        - rabbitmq
 
     rabbitmq:
       image: rabbitmq

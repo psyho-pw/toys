@@ -10,3 +10,7 @@ export * from './rabbitMQ/rabbitMQ.module'
 export * from './rabbitMQ/rabbitMQ.service'
 
 export * from './middlewares/logger.middleware'
+
+export * from './auth/auth.module'
+export * from './auth/jwt-auth.guard'
+export * from './auth/services'

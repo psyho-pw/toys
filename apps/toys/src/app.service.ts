@@ -8,7 +8,7 @@ import {CreateUserDto} from './dto/create-user.dto'
 export class AppService {
     constructor(@Inject(AUTH_SERVICE) private authClient: ClientProxy) {}
 
-    async createUser(request: CreateUserDto) {
-        return lastValueFrom(this.authClient.emit('create_user', {request}))
+    async createUser(request: CreateUserDto, authentication: string) {
+        return lastValueFrom(this.authClient.emit('message', {request, Authentication: authentication}))
     }
 }

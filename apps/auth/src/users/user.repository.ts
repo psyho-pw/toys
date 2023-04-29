@@ -5,7 +5,7 @@ import {InjectRepository} from '@nestjs/typeorm'
 import {Repository} from 'typeorm'
 
 @Injectable()
-export class UserMariaRepository extends AbstractMariaRepository<User> {
+export class UserRepository extends AbstractMariaRepository<User> {
     protected readonly logger: Logger
 
     constructor(

@@ -9,9 +9,10 @@ export class LoggerMiddleware implements NestMiddleware {
         const {ip, method, originalUrl} = request
         const userAgent = request.get('user-agent') || ''
         //request log
-        this.logger.debug(`REQUEST [${method} ${originalUrl}] ${ip} ${userAgent}`, {
+        this.logger.log(`REQUEST [${method} ${originalUrl}] ${ip} ${userAgent}`, {
             query: request.query,
             body: request.body,
+            header: request.headers,
         })
 
         const send = response.send
@@ -21,7 +22,7 @@ export class LoggerMiddleware implements NestMiddleware {
                 exitData = JSON.parse(exitData)
             } catch (err) {}
             //response log
-            this.logger.debug(`RESPONSE`, {status: statusCode, data: exitData})
+            this.logger.log(`RESPONSE`, {status: statusCode, data: exitData})
 
             response.send = send
             return response.send(exitData)

@@ -1,15 +1,13 @@
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import {AuthController} from './auth.controller'
 import {AuthService} from './auth.service'
-import {ConfigModule} from '@nestjs/config'
-import {LoggerMiddleware, MariaModule, MongoModule, RabbitMQModule} from '@app/common'
+import {ConfigModule, ConfigService} from '@nestjs/config'
+import {LoggerMiddleware, MariaModule, RabbitMQModule} from '@app/common'
 import * as Joi from 'joi'
-import {MongooseModule} from '@nestjs/mongoose'
-import {User, UserSchema} from './schema/user.schema'
-import {User as UserEntity} from '@app/common/maria/entity/user.entity'
-import {UserMongoRepository} from './user-mongo.repository'
-import {TypeOrmModule} from '@nestjs/typeorm'
-import {UserMariaRepository} from './user-maria.repository'
+import {UserModule} from './users/user.module'
+import {JwtModule} from '@nestjs/jwt'
+import {LocalStrategy} from './strategies/local.strategy'
+import {JwtStrategy} from './strategies/jwt.strategy'
 
 @Module({
     imports: [
@@ -30,16 +28,26 @@ import {UserMariaRepository} from './user-maria.repository'
 
                 RABBIT_MQ_URI: Joi.string().required(),
                 RABBIT_MQ_AUTH_QUEUE: Joi.string().required(),
+
+                JWT_SECRET: Joi.string().required(),
+                JWT_EXPIRATION: Joi.number().required(),
             }),
         }),
-        MongoModule,
-        MongooseModule.forFeature([{name: User.name, schema: UserSchema}]),
+        JwtModule.registerAsync({
+            useFactory: (configService: ConfigService) => ({
+                secret: configService.get<string>('JWT_SECRET'),
+                signOptions: {
+                    expiresIn: `${configService.get<number>('JWT_EXPIRATION')}s`,
+                },
+            }),
+            inject: [ConfigService],
+        }),
         MariaModule,
-        TypeOrmModule.forFeature([UserEntity]),
         RabbitMQModule,
+        UserModule,
     ],
     controllers: [AuthController],
-    providers: [AuthService, UserMongoRepository, UserMariaRepository],
+    providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule implements NestModule {
     configure(consumer: MiddlewareConsumer): void {
