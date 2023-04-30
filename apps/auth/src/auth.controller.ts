@@ -8,6 +8,7 @@ import {CurrentUser} from './current-user.decorator'
 import {Response} from 'express'
 import JwtAuthGuard from './guards/jwt-auth.guard'
 import {LocalAuthGuard} from './guards/local-auth.guard'
+import {CreateUserDto} from './users/dto/create-user.dto'
 
 @Controller('/auth')
 export class AuthController {
@@ -30,8 +31,8 @@ export class AuthController {
 
     @UseGuards(JwtAuthGuard)
     @EventPattern('message')
-    async handleMessage(@Payload() data: any, @Ctx() context: RmqContext) {
+    async handleMessage(@Payload() data: CreateUserDto, @Ctx() context: RmqContext) {
         await this.authService.handleMessage(data)
-        this.rabbitMQService.sendAck(context)
+        // this.rabbitMQService.sendAck(context)
     }
 }

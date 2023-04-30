@@ -1,7 +1,7 @@
 import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import * as cookieParser from 'cookie-parser'
 import {RabbitMQModule} from '../rabbitMQ/rabbitMQ.module'
-import {AUTH_SERVICE} from './services'
+import {AUTH_SERVICE} from '@app/common/services'
 
 @Module({
     imports: [RabbitMQModule.register({name: AUTH_SERVICE})],

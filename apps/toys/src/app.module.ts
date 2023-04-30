@@ -2,10 +2,9 @@ import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import * as Joi from 'joi'
 import {AppController} from './app.controller'
 import {AppService} from './app.service'
-import {LoggerMiddleware} from '@app/common/middlewares/logger.middleware'
 import {ConfigModule} from '@nestjs/config'
-import {AuthModule, RabbitMQModule} from '@app/common'
-import {AUTH_SERVICE} from './constants/services'
+import {AUTH_SERVICE, AuthModule, RabbitMQModule} from '@app/common'
+import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
 
 @Module({
     imports: [

@@ -1,9 +1,13 @@
 import {Request, Response, NextFunction} from 'express'
 import {Injectable, NestMiddleware, Inject, Logger} from '@nestjs/common'
+import {ConfigService} from '@nestjs/config'
 
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
-    private logger = new Logger('HTTP')
+    private logger: Logger
+    constructor(@Inject(ConfigService) configService: ConfigService) {
+        this.logger = new Logger(`HTTP:${configService.get<number>('PORT')}`)
+    }
 
     public use(request: Request, response: Response, next: NextFunction): void {
         const {ip, method, originalUrl} = request

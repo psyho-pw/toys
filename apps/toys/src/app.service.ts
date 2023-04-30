@@ -1,8 +1,8 @@
 import {Inject, Injectable} from '@nestjs/common'
-import {AUTH_SERVICE} from './constants/services'
 import {ClientProxy} from '@nestjs/microservices'
 import {lastValueFrom} from 'rxjs'
 import {CreateUserDto} from './dto/create-user.dto'
+import {AUTH_SERVICE} from '@app/common'
 
 @Injectable()
 export class AppService {

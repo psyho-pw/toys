@@ -2,12 +2,13 @@ import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import {AuthController} from './auth.controller'
 import {AuthService} from './auth.service'
 import {ConfigModule, ConfigService} from '@nestjs/config'
-import {LoggerMiddleware, MariaModule, RabbitMQModule} from '@app/common'
+import {MariaModule, RabbitMQModule} from '@app/common'
 import * as Joi from 'joi'
 import {UserModule} from './users/user.module'
 import {JwtModule} from '@nestjs/jwt'
 import {LocalStrategy} from './strategies/local.strategy'
 import {JwtStrategy} from './strategies/jwt.strategy'
+import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
 
 @Module({
     imports: [
@@ -31,6 +32,11 @@ import {JwtStrategy} from './strategies/jwt.strategy'
 
                 JWT_SECRET: Joi.string().required(),
                 JWT_EXPIRATION: Joi.number().required(),
+
+                MAIL_HOST: Joi.string().required(),
+                MAIL_PORT: Joi.number().required(),
+                MAIL_USER: Joi.string().required(),
+                MAIL_PASS: Joi.string().required(),
             }),
         }),
         JwtModule.registerAsync({

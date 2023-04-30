@@ -3,10 +3,11 @@ import {UserRepository} from './user.repository'
 import {CreateUserDto} from './dto/create-user.dto'
 import {User, UserExcludeCredentials} from '@app/common/maria/entity/user.entity'
 import {plainToInstance} from 'class-transformer'
+import {MailService} from '@app/mail'
 
 @Injectable()
 export class UserService {
-    constructor(private readonly userRepository: UserRepository) {}
+    constructor(private readonly userRepository: UserRepository, private readonly mailService: MailService) {}
 
     public async create(createUserDto: CreateUserDto) {
         const existingUser = await this.userRepository.findOneByCondition({email: createUserDto.email})
@@ -29,6 +30,7 @@ export class UserService {
     }
 
     public async findOne(id: number) {
+        await this.mailService.sendSingle()
         return this.userRepository.findOneById(id)
     }
 }
