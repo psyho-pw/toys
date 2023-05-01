@@ -43,6 +43,8 @@
       "entryFile": "index",
       "sourceRoot": "libs/mail/src",
       "compilerOptions": {
+        "assets": ["templates/*"],
+        "watchAssets": true,
         "tsConfigPath": "libs/mail/tsconfig.lib.json"
       }
     }

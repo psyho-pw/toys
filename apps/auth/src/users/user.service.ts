@@ -30,7 +30,16 @@ export class UserService {
     }
 
     public async findOne(id: number) {
-        await this.mailService.sendSingle()
+        await this.mailService.sendSingle({
+            to: 'fishcreek@naver.com',
+            subject: 'Testing Mailer module',
+            template: 'activation_code.html',
+            context: {
+                // Data to be sent to template engine.
+                code: 'cf1a3f828287',
+                username: 'john doe',
+            },
+        })
         return this.userRepository.findOneById(id)
     }
 }
