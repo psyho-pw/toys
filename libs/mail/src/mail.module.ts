@@ -17,7 +17,7 @@ import {HandlebarsAdapter} from '@nestjs-modules/mailer/dist/adapters/handlebars
                         pass: configService.get<string>('MAIL_PASS'),
                     },
                 },
-                defaults: {from: '"no-reply" <email address>'},
+                defaults: {from: '"no-reply" <noreply@noreply.com>'},
                 preview: false,
                 template: {
                     dir: path.resolve('templates'),
