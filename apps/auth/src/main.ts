@@ -11,7 +11,7 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe())
 
     const configService = app.get<ConfigService>(ConfigService)
-    // await app.startAllMicroservices()
+    await app.startAllMicroservices()
     await app.listen(configService.get<string>('PORT'))
 }
 bootstrap().then(() => Logger.verbose(`[${AuthModule.name}] Listening on port ${process.env.PORT}`))
