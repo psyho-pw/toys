@@ -12,7 +12,6 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-//    "strictNullChecks": true,
     "noImplicitAny": true,
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
@@ -31,6 +30,12 @@
       ],
       "@app/mail/*": [
         "libs/mail/src/*"
+      ],
+      "@app/notification": [
+        "libs/notification/src"
+      ],
+      "@app/notification/*": [
+        "libs/notification/src/*"
       ]
     }
   }

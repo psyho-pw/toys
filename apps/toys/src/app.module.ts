@@ -13,6 +13,7 @@ import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
             envFilePath: ['./apps/toys/.env'],
             validationSchema: Joi.object({
                 PORT: Joi.number().required(),
+                DISCORD_WEBHOOK_URL: Joi.string().required(),
             }),
         }),
         RabbitMQModule.register({name: AUTH_SERVICE}),

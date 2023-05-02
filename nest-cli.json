@@ -43,9 +43,20 @@
       "entryFile": "index",
       "sourceRoot": "libs/mail/src",
       "compilerOptions": {
-        "assets": ["templates/*"],
+        "assets": [
+          "templates/*"
+        ],
         "watchAssets": true,
         "tsConfigPath": "libs/mail/tsconfig.lib.json"
+      }
+    },
+    "notification": {
+      "type": "library",
+      "root": "libs/notification",
+      "entryFile": "index",
+      "sourceRoot": "libs/notification/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/notification/tsconfig.lib.json"
       }
     }
   }

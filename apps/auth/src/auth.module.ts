@@ -9,6 +9,7 @@ import {JwtModule} from '@nestjs/jwt'
 import {LocalStrategy} from './strategies/local.strategy'
 import {JwtStrategy} from './strategies/jwt.strategy'
 import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
+import {NotificationModule} from '@app/notification'
 
 @Module({
     imports: [
@@ -37,6 +38,8 @@ import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
                 MAIL_PORT: Joi.number().required(),
                 MAIL_USER: Joi.string().required(),
                 MAIL_PASS: Joi.string().required(),
+
+                DISCORD_WEBHOOK_URL: Joi.string().required(),
             }),
         }),
         JwtModule.registerAsync({
@@ -51,6 +54,7 @@ import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
         MariaModule,
         RabbitMQModule,
         UserModule,
+        NotificationModule,
     ],
     controllers: [AuthController],
     providers: [AuthService, LocalStrategy, JwtStrategy],
