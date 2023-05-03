@@ -15,3 +15,7 @@ export * from './auth/auth.module'
 export * from './auth/jwt-auth.guard'
 
 export * from './exceptions/general.exception'
+
+export * from './health/health.module'
+export * from './health/health.controller'
+export * from './health/home.controller'

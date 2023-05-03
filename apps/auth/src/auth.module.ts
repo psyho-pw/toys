@@ -2,7 +2,7 @@ import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import {AuthController} from './auth.controller'
 import {AuthService} from './auth.service'
 import {ConfigModule, ConfigService} from '@nestjs/config'
-import {MariaModule, RabbitMQModule} from '@app/common'
+import {HealthModule, MariaModule, RabbitMQModule} from '@app/common'
 import * as Joi from 'joi'
 import {UserModule} from './users/user.module'
 import {JwtModule} from '@nestjs/jwt'
@@ -53,6 +53,7 @@ import {NotificationModule} from '@app/notification'
         }),
         MariaModule,
         RabbitMQModule,
+        HealthModule,
         UserModule,
         NotificationModule,
     ],

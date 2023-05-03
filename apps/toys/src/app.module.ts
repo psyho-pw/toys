@@ -3,7 +3,7 @@ import * as Joi from 'joi'
 import {AppController} from './app.controller'
 import {AppService} from './app.service'
 import {ConfigModule} from '@nestjs/config'
-import {AUTH_SERVICE, AuthModule, RabbitMQModule} from '@app/common'
+import {AUTH_SERVICE, AuthModule, HealthModule, MariaModule, RabbitMQModule} from '@app/common'
 import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
 
 @Module({
@@ -18,6 +18,8 @@ import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
         }),
         RabbitMQModule.register({name: AUTH_SERVICE}),
         AuthModule,
+        HealthModule,
+        MariaModule,
     ],
     controllers: [AppController],
     providers: [AppService],
