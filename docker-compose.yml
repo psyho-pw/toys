@@ -11,9 +11,10 @@ services:
         - .:/usr/src/app
         - /usr/src/app/node_modules
       ports:
-        - '3000:3000'
+        - 3000:3000
       depends_on:
         - rabbitmq
+        - redis
 
     auth:
       build:
@@ -27,11 +28,35 @@ services:
         - .:/usr/src/app
         - /usr/src/app/node_modules
       ports:
-        - '3001:3001'
+        - 3001:3001
       depends_on:
         - rabbitmq
+        - redis
+
+    files:
+      build:
+        context: .
+        dockerfile: ./apps/files/Dockerfile
+        target: development
+      command: yarn start:dev files
+      env_file:
+        - ./apps/files/.env
+      volumes:
+        - .:/usr/src/app
+        - /usr/src/app/node_modules
+      ports:
+        - 3002:3002
+      depends_on:
+        - rabbitmq
+        - redis
 
     rabbitmq:
       image: rabbitmq
       ports:
-        - '5672:5672'
+        - 5672:5672
+
+    redis:
+      image: redis:latest
+      command: redis-server --port 6379
+      ports:
+        - 6379:6379

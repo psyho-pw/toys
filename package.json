@@ -47,6 +47,7 @@
     "mongoose": "^7.1.0",
     "mysql2": "^3.2.4",
     "nodemailer": "^6.9.1",
+    "oci-sdk": "^2.59.0",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
