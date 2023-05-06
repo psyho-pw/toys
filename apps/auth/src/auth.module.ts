@@ -10,6 +10,8 @@ import {LocalStrategy} from './strategies/local.strategy'
 import {JwtStrategy} from './strategies/jwt.strategy'
 import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
 import {NotificationModule} from '@app/notification'
+import {TypeOrmModule} from '@nestjs/typeorm'
+import {File} from '@app/common/maria/entity/file.entity'
 
 @Module({
     imports: [

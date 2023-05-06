@@ -3,6 +3,7 @@ import {ConfigService} from '@nestjs/config'
 import {TypeOrmModule} from '@nestjs/typeorm'
 import * as process from 'process'
 import {User} from '@app/common/maria/entity/user.entity'
+import {File} from '@app/common/maria/entity/file.entity'
 
 @Module({
     imports: [
@@ -17,7 +18,7 @@ import {User} from '@app/common/maria/entity/user.entity'
                 synchronize: process.env.NODE_ENV === 'development',
                 dropSchema: false,
                 logging: process.env.NODE_ENV === 'development',
-                entities: [User],
+                entities: [User, File],
                 keepConnectionAlive: true,
             }),
             inject: [ConfigService],
