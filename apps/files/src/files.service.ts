@@ -1,24 +1,20 @@
 import {Injectable} from '@nestjs/common'
-import common from 'oci-common'
+import {ConfigFileReader} from 'oci-common'
+import {ConfigFileAuthenticationDetailsProvider} from 'oci-sdk'
+import path from 'path'
 
 @Injectable()
 export class FilesService {
-    getHello(): string {
-        // Using default configuration
-        // const provider: common.ConfigFileAuthenticationDetailsProvider = new common.ConfigFileAuthenticationDetailsProvider()
-        // Using personal configuration
-        const configurationFilePath = '/usr/src/apps/files/.oci-config'
-        const configProfile = 'your_profile_name'
+    private readonly configFilePath: string = path.resolve('apps/files/.oci/config')
+    private readonly configProfile: string = 'DEFAULT'
+    async getCredentials() {
+        const config = ConfigFileReader.parseFileFromPath(this.configFilePath, this.configProfile)
+        const profile = config.accumulator.configurationsByProfile.get(this.configProfile)
 
-        const config = common.ConfigFileReader.parseDefault(configurationFilePath)
-        const profile = config.accumulator.configurationsByProfile.get(configProfile)
-        console.log(profile)
-        const customCompartmentId = profile.get('customCompartmentId') || ''
+        const provider: ConfigFileAuthenticationDetailsProvider = new ConfigFileAuthenticationDetailsProvider(this.configFilePath, this.configProfile)
+        console.log('user: ', provider.getUser())
+        console.log('provider: ', provider)
 
-        const provider: common.ConfigFileAuthenticationDetailsProvider = new common.ConfigFileAuthenticationDetailsProvider(configurationFilePath, configProfile)
-
-        console.log(provider.getUser())
-
-        return 'Hello World!'
+        return Object.fromEntries(profile)
     }
 }

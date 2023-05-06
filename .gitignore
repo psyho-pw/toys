@@ -7,7 +7,7 @@
 /apps/*/.env
 
 # OCI config file
-/apps/*/.oci-config
+/apps/*/.oci
 
 # Logs
 logs
