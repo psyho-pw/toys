@@ -3,8 +3,8 @@ import {AbstractActorEntity} from '@app/common/maria/abstract.entity'
 
 @Entity()
 export class File extends AbstractActorEntity {
-    @Column()
-    @Index()
+    @Index({unique: true})
+    @Column({type: 'varchar', length: 24, nullable: false})
     objectName: string
 
     @Column()
@@ -16,8 +16,8 @@ export class File extends AbstractActorEntity {
     @Column()
     size: number
 
-    @Column()
     @Index()
+    @Column()
     opcRequestId: string
 
     @Column()

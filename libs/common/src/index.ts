@@ -13,6 +13,7 @@ export * from './rabbitMQ/rabbitMQ.service'
 
 export * from './auth/auth.module'
 export * from './auth/jwt-auth.guard'
+export * from './auth/current-user.decorator'
 
 export * from './exceptions/general.exception'
 

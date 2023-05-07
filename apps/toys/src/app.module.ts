@@ -14,6 +14,9 @@ import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
             validationSchema: Joi.object({
                 PORT: Joi.number().required(),
                 DISCORD_WEBHOOK_URL: Joi.string().required(),
+
+                RABBIT_MQ_URI: Joi.string().required(),
+                RABBIT_MQ_AUTH_QUEUE: Joi.string().required(),
             }),
         }),
         RabbitMQModule.register({name: AUTH_SERVICE}),

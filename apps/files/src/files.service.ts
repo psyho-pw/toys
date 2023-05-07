@@ -8,6 +8,8 @@ import {ObjectStorageClient, requests, responses} from 'oci-objectstorage'
 import {FilesRepository} from './fiiles.repository'
 import {File} from '@app/common/maria/entity/file.entity'
 import {Types} from 'mongoose'
+import {User} from '@app/common/maria/entity/user.entity'
+import * as stream from 'stream'
 
 @Injectable()
 export class FilesService {
@@ -54,11 +56,11 @@ export class FilesService {
         return Object.fromEntries(this.profile)
     }
 
-    async createMany(files: Array<Express.Multer.File>) {
-        return Promise.all(files.map(async file => await this.createOne(file)))
+    async createMany(files: Array<Express.Multer.File>, requestUser: User) {
+        return Promise.all(files.map(async file => await this.createOne(file, requestUser)))
     }
 
-    async createOne(file: Express.Multer.File) {
+    async createOne(file: Express.Multer.File, requestUser: User) {
         const objectName = new Types.ObjectId().toString()
         const request: requests.PutObjectRequest = {
             namespaceName: this.nameSpace,
@@ -78,10 +80,20 @@ export class FilesService {
         fileEntity.opcContentMd5 = uploadResult.opcContentMd5
         fileEntity.eTag = uploadResult.eTag
         fileEntity.versionId = uploadResult.versionId
+        fileEntity.createdBy = requestUser
 
         return this.filesRepository.create(fileEntity)
     }
 
+    private streamToString(stream: ReadableStream) {
+        let output = ''
+        stream.on('data', data => {
+            output += data.toString()
+        })
+        stream.on('end', () => {
+            return output
+        })
+    }
     async findOne(id: number) {
         const file = await this.filesRepository.findOneById(id)
         const request: requests.GetObjectRequest = {
@@ -90,7 +102,12 @@ export class FilesService {
             objectName: file.objectName,
         }
 
-        return this.objectStorageClient.getObject(request)
+        const result = await this.objectStorageClient.getObject(request)
+        const stream = result.value as ReadableStream
+        console.log(stream.locked)
+        return this.streamToString(stream)
+
+        // return result.value as stream.Readable
     }
 
     async deleteOne(id: number) {

@@ -3,7 +3,6 @@ import {ConfigService} from '@nestjs/config'
 import {JwtService} from '@nestjs/jwt'
 import {User} from '@app/common/maria/entity/user.entity'
 import {Response} from 'express'
-import {DiscordService} from '@app/notification'
 
 export interface TokenPayload {
     userId: number
@@ -12,10 +11,9 @@ export interface TokenPayload {
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name)
-    constructor(private readonly configService: ConfigService, private readonly jwtService: JwtService, private readonly discordService: DiscordService) {}
+    constructor(private readonly configService: ConfigService, private readonly jwtService: JwtService) {}
 
     public async signIn(user: User, response: Response) {
-        await this.discordService.sendMessage('test')
         const tokenPayload: TokenPayload = {
             userId: user.id,
         }
