@@ -3,8 +3,10 @@ import {FilesService} from './files.service'
 import {AnyFilesInterceptor} from '@nestjs/platform-express'
 import {CurrentUser, JwtAuthGuard} from '@app/common'
 import {User} from '@app/common/maria/entity/user.entity'
+import stream from 'stream'
+import type {Response} from 'express'
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller()
 export class FilesController {
     constructor(private readonly filesService: FilesService) {}
@@ -21,9 +23,28 @@ export class FilesController {
     }
 
     @Get('/:id')
-    async findOne(@Param('id') id: number, @Res() res: Response) {
-        const readableStream = await this.filesService.findOne(id)
-        console.log(readableStream)
+    async findOne(@Param('id') id: number, @Res({passthrough: true}) res: Response) {
+        const {stream: readableStream, file} = await this.filesService.findOne(id)
+
+        //! transform web stream into Uint8Array
+        // const reader = readableStream.getReader()
+        // let ret: Uint8Array = new Uint8Array()
+        // while (true) {
+        //     const {done, value} = await reader.read()
+        //     if (done) break
+        //     ret = new Uint8Array([...ret, ...value])
+        // }
+
+        //! Stability 1 - experimental
+        // @ts-ignore
+        const nodeStream = stream.Readable.fromWeb(readableStream)
+
+        res.set({
+            'Content-Type': file.mimeType,
+            'Content-Disposition': `attachment; filename="${file.originalName}"`,
+        })
+
+        return new StreamableFile(nodeStream)
     }
 
     @Delete('/:id')

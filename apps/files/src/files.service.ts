@@ -9,7 +9,7 @@ import {FilesRepository} from './fiiles.repository'
 import {File} from '@app/common/maria/entity/file.entity'
 import {Types} from 'mongoose'
 import {User} from '@app/common/maria/entity/user.entity'
-import * as stream from 'stream'
+import stream from 'stream'
 
 @Injectable()
 export class FilesService {
@@ -85,7 +85,7 @@ export class FilesService {
         return this.filesRepository.create(fileEntity)
     }
 
-    private streamToString(stream: ReadableStream) {
+    private streamToString(stream: stream.Readable) {
         let output = ''
         stream.on('data', data => {
             output += data.toString()
@@ -103,11 +103,11 @@ export class FilesService {
         }
 
         const result = await this.objectStorageClient.getObject(request)
-        const stream = result.value as ReadableStream
-        console.log(stream.locked)
-        return this.streamToString(stream)
 
-        // return result.value as stream.Readable
+        return {
+            stream: result.value as ReadableStream,
+            file,
+        }
     }
 
     async deleteOne(id: number) {
