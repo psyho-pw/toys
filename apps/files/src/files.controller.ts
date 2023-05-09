@@ -6,7 +6,7 @@ import {User} from '@app/common/maria/entity/user.entity'
 import stream from 'stream'
 import type {Response} from 'express'
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller()
 export class FilesController {
     constructor(private readonly filesService: FilesService) {}
