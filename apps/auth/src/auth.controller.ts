@@ -12,7 +12,11 @@ import {CreateUserDto} from './users/dto/create-user.dto'
 @Controller('/auth')
 export class AuthController {
     private readonly logger = new Logger(AuthController.name)
-    constructor(private readonly configService: ConfigService, private readonly authService: AuthService, private readonly rabbitMQService: RabbitMQService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly authService: AuthService,
+        private readonly rabbitMQService: RabbitMQService,
+    ) {}
 
     @UseGuards(LocalAuthGuard)
     @Post('/')

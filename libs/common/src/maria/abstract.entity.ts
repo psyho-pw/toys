@@ -1,4 +1,12 @@
-import {CreateDateColumn, DeleteDateColumn, JoinColumn, ManyToOne, PrimaryGeneratedColumn, Relation, UpdateDateColumn} from 'typeorm'
+import {
+    CreateDateColumn,
+    DeleteDateColumn,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    Relation,
+    UpdateDateColumn,
+} from 'typeorm'
 import {User} from '@app/common/maria/entity/user.entity'
 
 export abstract class AbstractEntity {

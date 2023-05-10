@@ -11,7 +11,10 @@ export interface TokenPayload {
 @Injectable()
 export class AuthService {
     private readonly logger = new Logger(AuthService.name)
-    constructor(private readonly configService: ConfigService, private readonly jwtService: JwtService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly jwtService: JwtService,
+    ) {}
 
     public async signIn(user: User, response: Response) {
         const tokenPayload: TokenPayload = {

@@ -54,7 +54,10 @@ export class OracleStorageService extends AbstractStorage {
         return Object.fromEntries(this.profile)
     }
 
-    async putObject(file: Express.Multer.File, objectName: string): Promise<responses.PutObjectResponse> {
+    async putObject(
+        file: Express.Multer.File,
+        objectName: string,
+    ): Promise<responses.PutObjectResponse> {
         const request: requests.PutObjectRequest = {
             namespaceName: this.nameSpace,
             bucketName: this.bucket.bucket.name,

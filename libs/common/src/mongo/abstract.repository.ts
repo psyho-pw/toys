@@ -28,7 +28,11 @@ export abstract class AbstractMongoRepository<T extends AbstractMongoSchema> {
     }
 
     async upsert(filterQuery: FilterQuery<T>, document: Partial<T>): Promise<T> {
-        return this.model.findOneAndUpdate(filterQuery, document, {lean: true, upsert: true, new: true})
+        return this.model.findOneAndUpdate(filterQuery, document, {
+            lean: true,
+            upsert: true,
+            new: true,
+        })
     }
 
     async find(filterQuery: FilterQuery<T>): Promise<T[]> {

@@ -15,4 +15,6 @@ async function bootstrap() {
     await app.listen(configService.get<number>('PORT'))
 }
 
-bootstrap().then(() => Logger.verbose(`[${FilesModule.name}] Listening on port ${process.env.PORT}`))
+bootstrap().then(() =>
+    Logger.verbose(`[${FilesModule.name}] Listening on port ${process.env.PORT}`),
+)

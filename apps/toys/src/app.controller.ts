@@ -6,7 +6,10 @@ import {ConfigService} from '@nestjs/config'
 
 @Controller()
 export class AppController {
-    constructor(private readonly appService: AppService, private readonly configService: ConfigService) {}
+    constructor(
+        private readonly appService: AppService,
+        private readonly configService: ConfigService,
+    ) {}
 
     @Post('/test')
     @UseGuards(JwtAuthGuard)

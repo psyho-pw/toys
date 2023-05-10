@@ -12,7 +12,9 @@ export interface BaseRepository<T> {
     findWithRelations(relations: any): Promise<T[]>
 }
 
-export abstract class AbstractMariaRepository<T extends AbstractEntity> implements BaseRepository<T> {
+export abstract class AbstractMariaRepository<T extends AbstractEntity>
+    implements BaseRepository<T>
+{
     protected abstract readonly logger: Logger
     private readonly entity: Repository<T>
 
@@ -30,7 +32,9 @@ export abstract class AbstractMariaRepository<T extends AbstractEntity> implemen
         return entity
     }
 
-    public async findOneByCondition(filterCondition: FindOptionsWhere<T> | FindOptionsWhere<T>[]): Promise<T> {
+    public async findOneByCondition(
+        filterCondition: FindOptionsWhere<T> | FindOptionsWhere<T>[],
+    ): Promise<T> {
         return this.entity.findOne({where: filterCondition})
     }
 

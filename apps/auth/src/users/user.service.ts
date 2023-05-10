@@ -7,10 +7,15 @@ import {MailService} from '@app/mail'
 
 @Injectable()
 export class UserService {
-    constructor(private readonly userRepository: UserRepository, private readonly mailService: MailService) {}
+    constructor(
+        private readonly userRepository: UserRepository,
+        private readonly mailService: MailService,
+    ) {}
 
     public async create(createUserDto: CreateUserDto) {
-        const existingUser = await this.userRepository.findOneByCondition({email: createUserDto.email})
+        const existingUser = await this.userRepository.findOneByCondition({
+            email: createUserDto.email,
+        })
         if (existingUser) throw new UnprocessableEntityException('user already exists')
 
         const user = new User()

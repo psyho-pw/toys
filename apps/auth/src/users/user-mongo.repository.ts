@@ -8,7 +8,10 @@ import {Connection, Model} from 'mongoose'
 export class UserMongoRepository extends AbstractMongoRepository<User> {
     protected readonly logger = new Logger(UserMongoRepository.name)
 
-    constructor(@InjectModel(User.name) userModel: Model<User>, @InjectConnection() connection: Connection) {
+    constructor(
+        @InjectModel(User.name) userModel: Model<User>,
+        @InjectConnection() connection: Connection,
+    ) {
         super(userModel, connection)
     }
 }

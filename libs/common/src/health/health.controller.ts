@@ -1,6 +1,13 @@
 import {Controller, Get} from '@nestjs/common'
 import {ApiTags} from '@nestjs/swagger'
-import {HealthCheck, HealthCheckService, HttpHealthIndicator, MemoryHealthIndicator, MongooseHealthIndicator, TypeOrmHealthIndicator} from '@nestjs/terminus'
+import {
+    HealthCheck,
+    HealthCheckService,
+    HttpHealthIndicator,
+    MemoryHealthIndicator,
+    MongooseHealthIndicator,
+    TypeOrmHealthIndicator,
+} from '@nestjs/terminus'
 import {ConfigService} from '@nestjs/config'
 
 @ApiTags('Health')
@@ -20,7 +27,11 @@ export class HealthController {
     check() {
         console.log(`http://localhost:${this.configService.get<number>('PORT')}`)
         return this.health.check([
-            () => this.http.pingCheck('Basic', `http://localhost:${this.configService.get<number>('PORT')}`),
+            () =>
+                this.http.pingCheck(
+                    'Basic',
+                    `http://localhost:${this.configService.get<number>('PORT')}`,
+                ),
             () => this.memory.checkHeap('memory heap', 150 * 1024 * 1024),
             () => this.mariadb.pingCheck('mariadb'),
             // () => this.db.pingCheck('mongoDB'),

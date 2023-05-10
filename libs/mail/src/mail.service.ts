@@ -6,7 +6,10 @@ import {ISendMailOptions} from '@nestjs-modules/mailer/dist/interfaces/send-mail
 @Injectable()
 export class MailService {
     private readonly logger = new Logger(MailService.name)
-    constructor(private readonly configService: ConfigService, private readonly mailerService: MailerService) {}
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly mailerService: MailerService,
+    ) {}
 
     public async sendSingle(options: ISendMailOptions) {
         return this.mailerService

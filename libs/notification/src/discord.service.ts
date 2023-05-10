@@ -26,15 +26,23 @@ export class DiscordService {
         }
     }
 
-    constructor(private readonly configService: ConfigService, private readonly httpService: HttpService) {
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly httpService: HttpService,
+    ) {
         this.getCredentials()
             .then(() => this.logger.verbose('✅  DiscordNotificationModule instance initialized'))
             .catch(error => this.logger.error('error caught', error))
     }
 
-    public async sendMessage(message: string, title?: string, additional?: Array<APIEmbedField>): Promise<void> {
+    public async sendMessage(
+        message: string,
+        title?: string,
+        additional?: Array<APIEmbedField>,
+    ): Promise<void> {
         await this.getCredentials()
-        if (!this.webhookClient) this.webhookClient = new WebhookClient({id: this.webhookId, token: this.webhookToken})
+        if (!this.webhookClient)
+            this.webhookClient = new WebhookClient({id: this.webhookId, token: this.webhookToken})
 
         const embed = new EmbedBuilder()
             .setTitle(title ? title : 'Error Report')
@@ -48,9 +56,14 @@ export class DiscordService {
 
     public async sendErrorReport(err: any) {
         if (err instanceof GeneralException) {
-            if (err.getStatus() > 400) await this.sendMessage(err.message, err.getCalledFrom(), [{name: 'stack', value: (err.stack || '').substring(0, 1024)}])
+            if (err.getStatus() > 400)
+                await this.sendMessage(err.message, err.getCalledFrom(), [
+                    {name: 'stack', value: (err.stack || '').substring(0, 1024)},
+                ])
             return
         }
-        await this.sendMessage(err.message, 'Unhandled Error', [{name: 'stack', value: (err.stack || '').substring(0, 1024)}])
+        await this.sendMessage(err.message, 'Unhandled Error', [
+            {name: 'stack', value: (err.stack || '').substring(0, 1024)},
+        ])
     }
 }

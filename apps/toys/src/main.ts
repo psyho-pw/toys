@@ -9,4 +9,6 @@ async function bootstrap() {
     app.useGlobalPipes(new ValidationPipe())
     await app.listen(configService.get<number>('PORT'))
 }
-bootstrap().then(() => Logger.verbose(`[${process.env.NODE_ENV}] Listening on port ${process.env.PORT}`))
+bootstrap().then(() =>
+    Logger.verbose(`[${process.env.NODE_ENV}] Listening on port ${process.env.PORT}`),
+)

@@ -9,6 +9,8 @@ export class AppService {
     constructor(@Inject(AUTH_SERVICE) private authClient: ClientProxy) {}
 
     async createUser(request: CreateUserDto, authentication: string) {
-        return lastValueFrom(this.authClient.emit('message', {request, Authentication: authentication}))
+        return lastValueFrom(
+            this.authClient.emit('message', {request, Authentication: authentication}),
+        )
     }
 }

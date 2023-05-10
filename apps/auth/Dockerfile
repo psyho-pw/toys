@@ -1,7 +1,5 @@
-FROM ubuntu:latest
-LABEL authors="sayho"
-
 FROM node:20.0.0-alpine As development
+RUN npm i -g pnpm
 
 ARG NODE_ENV=development
 ENV NODE_ENV=${NODE_ENV}
@@ -9,13 +7,13 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
+COPY pnpm-lock.yaml ./
 
-RUN yarn install
+RUN pnpm install
 
 COPY . .
 
-RUN yarn run build
+RUN pnpm run build
 
 FROM node:20.0.0-alpine as production
 RUN apk --no-cache add tzdata && \
@@ -23,16 +21,17 @@ RUN apk --no-cache add tzdata && \
 	echo "Asia/Seoul" > /etc/timezone \
 	apk del tzdata
 
+RUN npm i -g pnpm
+
 ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
 COPY package.json ./
-COPY yarn.lock ./
+COPY pnpm-lock.yaml ./
 
-RUN yarn install --only=production
-
+RUN pnpm install --prod
 COPY . .
 
 COPY --from=development /usr/src/app/dist ./dist

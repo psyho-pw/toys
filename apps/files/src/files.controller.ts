@@ -1,4 +1,15 @@
-import {Controller, Delete, Get, Param, Post, Res, StreamableFile, UploadedFiles, UseGuards, UseInterceptors} from '@nestjs/common'
+import {
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Post,
+    Res,
+    StreamableFile,
+    UploadedFiles,
+    UseGuards,
+    UseInterceptors,
+} from '@nestjs/common'
 import {FilesService} from './files.service'
 import {AnyFilesInterceptor} from '@nestjs/platform-express'
 import {CurrentUser, JwtAuthGuard} from '@app/common'
