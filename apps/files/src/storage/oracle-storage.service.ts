@@ -6,19 +6,19 @@ import {ConfigFileReader} from 'oci-common'
 import {ConfigFileAuthenticationDetailsProvider} from 'oci-sdk'
 import {ObjectStorageClient, requests, responses} from 'oci-objectstorage'
 import {ConfigFile} from 'oci-common/lib/config-file-reader'
-import {Types} from 'mongoose'
 import {File} from '@app/common/maria/entity/file.entity'
 
 @Injectable()
 export class OracleStorageService extends AbstractStorage {
-    private readonly logger = new Logger(OracleStorageService.name)
+    protected readonly logger = new Logger(OracleStorageService.name)
     private readonly config: ConfigFile
     private readonly profile: Map<string, string>
     private readonly provider: ConfigFileAuthenticationDetailsProvider
 
-    private readonly objectStorageClient
+    protected readonly client
     private nameSpace: string
     private bucket: responses.GetBucketResponse
+
     constructor(private readonly configService: ConfigService) {
         super()
         const configFilePath = path.resolve(this.configService.get<string>('OCI_CONFIG_PATH'))
@@ -28,7 +28,7 @@ export class OracleStorageService extends AbstractStorage {
         this.profile = this.config.accumulator.configurationsByProfile.get(configProfile)
         this.provider = new ConfigFileAuthenticationDetailsProvider(configFilePath, configProfile)
 
-        this.objectStorageClient = new ObjectStorageClient({authenticationDetailsProvider: this.provider})
+        this.client = new ObjectStorageClient({authenticationDetailsProvider: this.provider})
         this.getNamespace()
             .then(async () => {
                 await this.getBucket()
@@ -38,7 +38,7 @@ export class OracleStorageService extends AbstractStorage {
 
     private async getNamespace() {
         const request: requests.GetNamespaceRequest = {}
-        const response = await this.objectStorageClient.getNamespace(request)
+        const response = await this.client.getNamespace(request)
         this.nameSpace = response.value
     }
 
@@ -47,7 +47,7 @@ export class OracleStorageService extends AbstractStorage {
             namespaceName: this.nameSpace,
             bucketName: this.configService.get<string>('OCI_OS_BUCKET_NAME'),
         }
-        this.bucket = await this.objectStorageClient.getBucket(getBucketRequest)
+        this.bucket = await this.client.getBucket(getBucketRequest)
     }
 
     getCredentials(): Record<string, string> {
@@ -63,7 +63,7 @@ export class OracleStorageService extends AbstractStorage {
             contentLength: file.size,
         }
 
-        return this.objectStorageClient.putObject(request)
+        return this.client.putObject(request)
     }
 
     async getObject(file: File): Promise<responses.GetObjectResponse> {
@@ -73,7 +73,7 @@ export class OracleStorageService extends AbstractStorage {
             objectName: file.objectName,
         }
 
-        return this.objectStorageClient.getObject(request)
+        return this.client.getObject(request)
     }
     async deleteObject(file: File) {
         const deleteObjectRequest: requests.DeleteObjectRequest = {
@@ -82,6 +82,6 @@ export class OracleStorageService extends AbstractStorage {
             objectName: file.objectName,
         }
 
-        return this.objectStorageClient.deleteObject(deleteObjectRequest)
+        return this.client.deleteObject(deleteObjectRequest)
     }
 }
