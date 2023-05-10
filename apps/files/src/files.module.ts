@@ -9,6 +9,7 @@ import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
 import {FilesRepository} from './fiiles.repository'
 import {TypeOrmModule} from '@nestjs/typeorm'
 import {File} from '@app/common/maria/entity/file.entity'
+import {StorageModule} from './storage/storage.module'
 
 @Module({
     imports: [
@@ -41,6 +42,7 @@ import {File} from '@app/common/maria/entity/file.entity'
         AuthModule,
         HealthModule,
         NotificationModule,
+        StorageModule,
     ],
     controllers: [FilesController],
     providers: [FilesService, FilesRepository],

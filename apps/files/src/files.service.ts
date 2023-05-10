@@ -1,59 +1,23 @@
 import {Injectable, Logger} from '@nestjs/common'
 import {ConfigService} from '@nestjs/config'
-import path from 'path'
-import {ConfigFileReader} from 'oci-common'
-import {ConfigFile} from 'oci-common/lib/config-file-reader'
-import {ConfigFileAuthenticationDetailsProvider} from 'oci-sdk'
-import {ObjectStorageClient, requests, responses} from 'oci-objectstorage'
 import {FilesRepository} from './fiiles.repository'
 import {File} from '@app/common/maria/entity/file.entity'
 import {Types} from 'mongoose'
 import {User} from '@app/common/maria/entity/user.entity'
-import stream from 'stream'
+import {OracleStorageService} from './storage/oracle-storage.service'
 
 @Injectable()
 export class FilesService {
     private readonly logger = new Logger(FilesService.name)
-    private readonly config: ConfigFile
-    private readonly profile: Map<string, string>
-    private readonly provider: ConfigFileAuthenticationDetailsProvider
 
-    private readonly objectStorageClient
-    private nameSpace: string
-    private bucket: responses.GetBucketResponse
-
-    constructor(private readonly configService: ConfigService, private readonly filesRepository: FilesRepository) {
-        const configFilePath = path.resolve(this.configService.get<string>('OCI_CONFIG_PATH'))
-        const configProfile = this.configService.get<string>('OCI_CONFIG_PROFILE')
-
-        this.config = ConfigFileReader.parseFileFromPath(configFilePath, configProfile)
-        this.profile = this.config.accumulator.configurationsByProfile.get(configProfile)
-        this.provider = new ConfigFileAuthenticationDetailsProvider(configFilePath, configProfile)
-
-        this.objectStorageClient = new ObjectStorageClient({authenticationDetailsProvider: this.provider})
-        this.getNamespace()
-            .then(async () => {
-                await this.getBucket()
-            })
-            .then(() => this.logger.verbose('✅  oci sdk initialized'))
-    }
-
-    private async getNamespace() {
-        const request: requests.GetNamespaceRequest = {}
-        const response = await this.objectStorageClient.getNamespace(request)
-        this.nameSpace = response.value
-    }
-
-    private async getBucket() {
-        const getBucketRequest: requests.GetBucketRequest = {
-            namespaceName: this.nameSpace,
-            bucketName: this.configService.get<string>('OCI_OS_BUCKET_NAME'),
-        }
-        this.bucket = await this.objectStorageClient.getBucket(getBucketRequest)
-    }
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly filesRepository: FilesRepository,
+        private readonly storageService: OracleStorageService,
+    ) {}
 
     async getCredentials() {
-        return Object.fromEntries(this.profile)
+        return this.storageService.getCredentials()
     }
 
     async createMany(files: Array<Express.Multer.File>, requestUser: User) {
@@ -62,14 +26,7 @@ export class FilesService {
 
     async createOne(file: Express.Multer.File, requestUser: User) {
         const objectName = new Types.ObjectId().toString()
-        const request: requests.PutObjectRequest = {
-            namespaceName: this.nameSpace,
-            bucketName: this.bucket.bucket.name,
-            putObjectBody: file.buffer,
-            objectName,
-            contentLength: file.size,
-        }
-        const uploadResult = await this.objectStorageClient.putObject(request)
+        const uploadResult = await this.storageService.putObject(file, objectName)
 
         const fileEntity = new File()
         fileEntity.objectName = objectName
@@ -85,24 +42,9 @@ export class FilesService {
         return this.filesRepository.create(fileEntity)
     }
 
-    private streamToString(stream: stream.Readable) {
-        let output = ''
-        stream.on('data', data => {
-            output += data.toString()
-        })
-        stream.on('end', () => {
-            return output
-        })
-    }
     async findOne(id: number) {
         const file = await this.filesRepository.findOneById(id)
-        const request: requests.GetObjectRequest = {
-            namespaceName: this.nameSpace,
-            bucketName: this.bucket.bucket.name,
-            objectName: file.objectName,
-        }
-
-        const result = await this.objectStorageClient.getObject(request)
+        const result = await this.storageService.getObject(file)
 
         return {
             stream: result.value as ReadableStream,
@@ -112,12 +54,8 @@ export class FilesService {
 
     async deleteOne(id: number) {
         const file = await this.filesRepository.findOneById(id)
-        const deleteObjectRequest: requests.DeleteObjectRequest = {
-            namespaceName: this.nameSpace,
-            bucketName: this.bucket.bucket.name,
-            objectName: file.objectName,
-        }
-        const deleteResult = await this.objectStorageClient.deleteObject(deleteObjectRequest)
+        const deleteResult = await this.storageService.deleteObject(file)
+
         this.logger.debug(deleteResult)
         return this.filesRepository.remove(id)
     }
