@@ -12,6 +12,8 @@ services:
         - /usr/src/app/node_modules
       ports:
         - 3000:3000
+      networks:
+        - backend
       depends_on:
         - rabbitmq
         - redis
@@ -29,6 +31,8 @@ services:
         - /usr/src/app/node_modules
       ports:
         - 3001:3001
+      networks:
+        - backend
       depends_on:
         - rabbitmq
         - redis
@@ -46,6 +50,8 @@ services:
         - /usr/src/app/node_modules
       ports:
         - 3002:3002
+      networks:
+        - backend
       depends_on:
         - rabbitmq
         - redis
@@ -54,9 +60,37 @@ services:
       image: rabbitmq
       ports:
         - 5672:5672
+        - 15672:15672
+      networks:
+        - backend
 
     redis:
       image: redis:latest
       command: redis-server --port 6379
       ports:
         - 6379:6379
+      networks:
+        - backend
+
+    kong:
+      build:
+        context: ./kong
+        dockerfile: Dockerfile
+      restart: unless-stopped
+      ports:
+        - "8000:8000"
+        - "8001:8001"
+        - "8443:8443"
+      networks:
+        - backend
+      logging:
+        driver: fluentd
+        options:
+          fluentd-async: "true"
+          fluentd-address: localhost:24224
+          tag: kong
+
+
+networks:
+  backend:
+    driver: bridge

@@ -1,0 +1,40 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+  - name: toys
+    host: toys
+    port: 3000
+    protocol: http
+    routes:
+      - name: toys_route
+        paths:
+          - /
+        strip_path: true
+
+  - name: auth_service
+    host: auth
+    port: 3001
+    protocol: http
+    routes:
+      - name: auth_route
+        paths:
+          - /auth
+        strip_path: true
+
+  - name: files_service
+    host: files
+    port: 3002
+    protocol: http
+    routes:
+      - name: files_route
+        paths:
+          - /files
+        strip_path: true
+
+plugins:
+  - name: rate-limiting
+    config:
+      second: 5
+      hour: 10000
+      policy: local

@@ -9,7 +9,7 @@ import JwtAuthGuard from './guards/jwt-auth.guard'
 import {LocalAuthGuard} from './guards/local-auth.guard'
 import {CreateUserDto} from './users/dto/create-user.dto'
 
-@Controller('/auth')
+@Controller()
 export class AuthController {
     private readonly logger = new Logger(AuthController.name)
     constructor(
