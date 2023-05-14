@@ -33,11 +33,16 @@ import {StorageModule} from './storage/storage.module'
 
                 OCI_CONFIG_PATH: Joi.string().required(),
                 OCI_CONFIG_PROFILE: Joi.string().required(),
-                OCI_OS_BUCKET_NAME: Joi.string().required(),
+                OCI_BUCKET_NAME: Joi.string().required(),
                 OCI_COMPARTMENT_ID: Joi.string().required(),
                 OCI_SERVICE_NAME_OBJECTSTORAGE: Joi.string().required(),
                 OCI_REGION_ID: Joi.string().required(),
                 OCI_SECOND_LEVEL_DOMAIN: Joi.string().required(),
+
+                AWS_ACCESS_KEY_ID: Joi.string().required(),
+                AWS_SECRET_ACCESS_KEY: Joi.string().required(),
+                AWS_REGION: Joi.string().required(),
+                AWS_BUCKET_NAME: Joi.string().required(),
             }),
         }),
         MariaModule,

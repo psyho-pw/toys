@@ -4,12 +4,7 @@ import {StorageService} from './abstract-storage'
 
 @Module({
     imports: [],
-    providers: [
-        {
-            provide: StorageService,
-            useClass: OracleStorageService,
-        },
-    ],
+    providers: [{provide: StorageService, useClass: OracleStorageService}],
     exports: [StorageService],
 })
 export class StorageModule {}

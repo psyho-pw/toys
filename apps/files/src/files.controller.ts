@@ -58,9 +58,9 @@ export class FilesController {
         return new StreamableFile(nodeStream)
     }
 
-    @Get('/:id/par')
-    async findOneWithPAR(@Param('id') id: number) {
-        return this.filesService.findOneWithPAR(id)
+    @Get('/:id/url')
+    async findOneUrl(@Param('id') id: number) {
+        return this.filesService.findOneUrl(id)
     }
 
     @Delete('/:id')

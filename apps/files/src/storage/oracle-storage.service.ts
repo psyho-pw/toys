@@ -33,8 +33,8 @@ export class OracleStorageService extends StorageService {
         const configProfile = this.configService.get<string>('OCI_CONFIG_PROFILE')
 
         this.compartmentId = this.configService.get<string>('OCI_COMPARTMENT_ID')
-        this.serviceName = this.configService.get<string>('OCI_SERVICE_NAME')
-        this.regionId = this.configService.get<string>('OCI_SERVICE_NAME_OBJECTSTORAGE')
+        this.serviceName = this.configService.get<string>('OCI_SERVICE_NAME_OBJECTSTORAGE')
+        this.regionId = this.configService.get<string>('OCI_REGION_ID')
         this.secondLevelDomain = this.configService.get<string>('OCI_SECOND_LEVEL_DOMAIN')
 
         this.config = ConfigFileReader.parseFileFromPath(configFilePath, configProfile)
@@ -71,7 +71,7 @@ export class OracleStorageService extends StorageService {
     private async getBucket() {
         const getBucketRequest: requests.GetBucketRequest = {
             namespaceName: this.nameSpace,
-            bucketName: this.configService.get<string>('OCI_OS_BUCKET_NAME'),
+            bucketName: this.configService.get<string>('OCI_BUCKET_NAME'),
         }
         const resp = await this.client.getBucket(getBucketRequest)
         this.bucket = resp.bucket

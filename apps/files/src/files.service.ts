@@ -52,7 +52,7 @@ export class FilesService {
         }
     }
 
-    public async findOneWithPAR(id: number) {
+    public async findOneUrl(id: number) {
         const file = await this.filesRepository.findOneById(id)
         return this.storageService.getUrl(file)
     }
