@@ -15,6 +15,8 @@ export * from './auth/auth.module'
 export * from './auth/jwt-auth.guard'
 export * from './auth/current-user.decorator'
 
+export * from './files/files.module'
+
 export * from './exceptions/general.exception'
 
 export * from './health/health.module'

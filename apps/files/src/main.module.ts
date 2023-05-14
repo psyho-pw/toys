@@ -1,15 +1,10 @@
-import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
-import {FilesController} from './files.controller'
-import {FilesService} from './files.service'
 import {ConfigModule} from '@nestjs/config'
 import * as Joi from 'joi'
-import {AUTH_SERVICE, AuthModule, HealthModule, MariaModule, RabbitMQModule} from '@app/common'
+import {HealthModule, MariaModule, RabbitMQModule} from '@app/common'
 import {NotificationModule} from '@app/notification'
+import {MiddlewareConsumer, Module, NestModule} from '@nestjs/common'
 import {LoggerMiddleware} from '@app/common/utils/middlewares/logger.middleware'
-import {FilesRepository} from './fiiles.repository'
-import {TypeOrmModule} from '@nestjs/typeorm'
-import {File} from '@app/common/maria/entity/file.entity'
-import {StorageModule} from './storage/storage.module'
+import {FilesModule} from './files/files.module'
 
 @Module({
     imports: [
@@ -46,17 +41,13 @@ import {StorageModule} from './storage/storage.module'
             }),
         }),
         MariaModule,
-        TypeOrmModule.forFeature([File]),
-        RabbitMQModule.register({name: AUTH_SERVICE}),
-        AuthModule,
+        RabbitMQModule,
         HealthModule,
         NotificationModule,
-        StorageModule,
+        FilesModule,
     ],
-    controllers: [FilesController],
-    providers: [FilesService, FilesRepository],
 })
-export class FilesModule implements NestModule {
+export class MainModule implements NestModule {
     configure(consumer: MiddlewareConsumer): void {
         consumer.apply(LoggerMiddleware).forRoutes('/')
     }

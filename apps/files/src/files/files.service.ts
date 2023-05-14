@@ -4,7 +4,7 @@ import {FilesRepository} from './fiiles.repository'
 import {File} from '@app/common/maria/entity/file.entity'
 import {Types} from 'mongoose'
 import {User} from '@app/common/maria/entity/user.entity'
-import {StorageService} from './storage/abstract-storage'
+import {StorageService} from '../storage/abstract-storage'
 
 @Injectable()
 export class FilesService {

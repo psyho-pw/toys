@@ -3,6 +3,7 @@ import {ConfigService} from '@nestjs/config'
 import {JwtService} from '@nestjs/jwt'
 import {User} from '@app/common/maria/entity/user.entity'
 import {Response} from 'express'
+import {RmqContext} from '@nestjs/microservices'
 
 export interface TokenPayload {
     userId: number
@@ -36,7 +37,8 @@ export class AuthService {
         response.cookie('Authentication', '', {httpOnly: true, expires: new Date()})
     }
 
-    public async handleMessage(data: any) {
-        this.logger.error(data.request)
+    public async handleMessage(data: any, context: RmqContext) {
+        this.logger.debug(data.request)
+        return data.request
     }
 }

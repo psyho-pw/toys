@@ -2,6 +2,7 @@ import {
     Controller,
     Delete,
     Get,
+    Logger,
     Param,
     Post,
     Res,
@@ -12,19 +13,44 @@ import {
 } from '@nestjs/common'
 import {FilesService} from './files.service'
 import {AnyFilesInterceptor} from '@nestjs/platform-express'
-import {CurrentUser, JwtAuthGuard} from '@app/common'
+import {CurrentUser, JwtAuthGuard, RabbitMQService} from '@app/common'
 import {User} from '@app/common/maria/entity/user.entity'
 import stream from 'stream'
 import type {Response} from 'express'
+import {Ctx, EventPattern, MessagePattern, Payload, RmqContext} from '@nestjs/microservices'
+import {Observable, Subscriber} from 'rxjs'
 
 @UseGuards(JwtAuthGuard)
 @Controller()
 export class FilesController {
-    constructor(private readonly filesService: FilesService) {}
+    private readonly logger = new Logger(FilesController.name)
+
+    constructor(
+        private readonly filesService: FilesService,
+        private readonly rabbitMQService: RabbitMQService,
+    ) {}
 
     @Get('/credentials')
     getCredentials() {
         return this.filesService.getCredentials()
+    }
+
+    @EventPattern('get-file')
+    async test(
+        // @CurrentUser() user: User,
+        @Payload() data: {id: number},
+        @Ctx() context: RmqContext,
+    ) {
+        return new Observable((observer: Subscriber<string>) => {
+            this.filesService.findOneUrl(data.id).then(res => {
+                observer.next(res)
+                observer.complete()
+            })
+        })
+
+        // return this.filesService.findOneUrl(data.id).pipe(tap(res => res))
+        // return user.pipe(tap())
+        // this.rabbitMQService.sendAck(context)
     }
 
     @Post('/')

@@ -34,7 +34,7 @@ export class AuthController {
     @UseGuards(JwtAuthGuard)
     @EventPattern('message')
     async handleMessage(@Payload() data: CreateUserDto, @Ctx() context: RmqContext) {
-        await this.authService.handleMessage(data)
+        return this.authService.handleMessage(data, context)
         // this.rabbitMQService.sendAck(context)
     }
 }
