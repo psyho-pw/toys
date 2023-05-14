@@ -4,7 +4,7 @@ import {FilesRepository} from './fiiles.repository'
 import {File} from '@app/common/maria/entity/file.entity'
 import {Types} from 'mongoose'
 import {User} from '@app/common/maria/entity/user.entity'
-import {OracleStorageService} from './storage/oracle-storage.service'
+import {StorageService} from './storage/abstract-storage'
 
 @Injectable()
 export class FilesService {
@@ -13,18 +13,18 @@ export class FilesService {
     constructor(
         private readonly configService: ConfigService,
         private readonly filesRepository: FilesRepository,
-        private readonly storageService: OracleStorageService,
+        private readonly storageService: StorageService,
     ) {}
 
-    async getCredentials() {
+    public async getCredentials() {
         return this.storageService.getCredentials()
     }
 
-    async createMany(files: Array<Express.Multer.File>, requestUser: User) {
+    public async createMany(files: Array<Express.Multer.File>, requestUser: User) {
         return Promise.all(files.map(async file => await this.createOne(file, requestUser)))
     }
 
-    async createOne(file: Express.Multer.File, requestUser: User) {
+    public async createOne(file: Express.Multer.File, requestUser: User) {
         const objectName = new Types.ObjectId().toString()
         const uploadResult = await this.storageService.putObject(file, objectName)
 
@@ -42,7 +42,7 @@ export class FilesService {
         return this.filesRepository.create(fileEntity)
     }
 
-    async findOne(id: number) {
+    public async findOne(id: number) {
         const file = await this.filesRepository.findOneById(id)
         const result = await this.storageService.getObject(file)
 
@@ -52,7 +52,12 @@ export class FilesService {
         }
     }
 
-    async deleteOne(id: number) {
+    public async findOneWithPAR(id: number) {
+        const file = await this.filesRepository.findOneById(id)
+        return this.storageService.getUrl(file)
+    }
+
+    public async deleteOne(id: number) {
         const file = await this.filesRepository.findOneById(id)
         const deleteResult = await this.storageService.deleteObject(file)
 

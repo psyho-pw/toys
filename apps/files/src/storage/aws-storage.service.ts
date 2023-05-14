@@ -1,12 +1,12 @@
 import {Injectable, InternalServerErrorException, Logger} from '@nestjs/common'
-import {AbstractStorage} from '../common/abstract-storage'
+import {StorageService} from './abstract-storage'
 import {ConfigService} from '@nestjs/config'
 import {config} from 'aws-sdk'
 import {S3} from 'aws-sdk'
 import {File} from '@app/common/maria/entity/file.entity'
 
 @Injectable()
-export class AwsStorageService extends AbstractStorage {
+export class AwsStorageService extends StorageService {
     protected readonly logger = new Logger(AwsStorageService.name)
     protected readonly client
 
@@ -24,19 +24,28 @@ export class AwsStorageService extends AbstractStorage {
         this.client = new S3()
     }
 
-    deleteObject(...args: any): Record<string, any> {
+    public getCredentials() {
         throw new InternalServerErrorException('not implemented')
+        return {}
     }
 
-    getCredentials(): Record<string, string> {
+    public async putObject(file: Express.Multer.File, objectName: string) {
         throw new InternalServerErrorException('not implemented')
+        return {}
     }
 
-    getObject(file: File): Record<string, any> {
+    public async getObject(file: File) {
         throw new InternalServerErrorException('not implemented')
+        return {}
     }
 
-    putObject(file: Express.Multer.File, objectName: string): Record<string, any> {
+    public async getUrl(file: File) {
         throw new InternalServerErrorException('not implemented')
+        return ''
+    }
+
+    public async deleteObject(...args: any) {
+        throw new InternalServerErrorException('not implemented')
+        return {}
     }
 }
