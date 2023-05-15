@@ -12,6 +12,7 @@ import {CreateUserDto} from './users/dto/create-user.dto'
 @Controller()
 export class AuthController {
     private readonly logger = new Logger(AuthController.name)
+
     constructor(
         private readonly configService: ConfigService,
         private readonly authService: AuthService,
